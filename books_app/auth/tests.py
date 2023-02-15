@@ -1,6 +1,6 @@
 import os
 from unittest import TestCase
-
+import app
 from datetime import date
  
 from books_app.extensions import app, db, bcrypt
@@ -8,7 +8,7 @@ from books_app.models import Book, Author, User, Audience, Genre
 
 """
 Run these tests with the command:
-python -m unittest books_app.main.tests
+python3 -m unittest books_app.auth.tests
 """
 
 #################################################
@@ -61,9 +61,16 @@ class AuthTests(TestCase):
     def test_signup_existing_user(self):
         # TODO: Write a test for the signup route. It should:
         # - Create a user
+        create_user()
         # - Make a POST request to /signup, sending the same username & password
+        post_data = {
+            'username': 'me1',
+            'password': 'password'
+        }
+        response = self.app.post('/signup', data=post_data)
+        response_text = response.get_data(as_text=True)
+        self.assertIn('That username is taken. Please choose a different one.', response_text)
         # - Check that the form is displayed again with an error message
-        pass
 
     def test_login_correct_password(self):
         # TODO: Write a test for the login route. It should:
