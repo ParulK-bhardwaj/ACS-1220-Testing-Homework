@@ -79,32 +79,54 @@ class AuthTests(TestCase):
         self.assertIn('That username is taken. Please choose a different one.', response_text)
 
     def test_login_correct_password(self):
-        # TODO: Write a test for the login route. It should:
         # - Create a user
+        create_user()
         # - Make a POST request to /login, sending the created username & password
+        post_data = {
+            'username': 'me1',
+            'password': 'password'
+        }
+        response = self.app.post('/login', data=post_data)
         # - Check that the "login" button is not displayed on the homepage
-        pass
+        response = self.app.get('/')
+        response_text = response.get_data(as_text=True)
+        self.assertNotIn('login', response_text)
 
     def test_login_nonexistent_user(self):
-        # TODO: Write a test for the login route. It should:
         # - Make a POST request to /login, sending a username & password
+        post_data = {
+            'username': 'WhatIsThis',
+            'password': 'GONE'
+        }
+        response = self.app.post('/login', data=post_data)
         # - Check that the login form is displayed again, with an appropriate
         #   error message
-        pass
+        response_text = response.get_data(as_text=True)
+        self.assertIn('No user with that username. Please try again.', response_text)
 
     def test_login_incorrect_password(self):
-        # TODO: Write a test for the login route. It should:
         # - Create a user
+        create_user()
         # - Make a POST request to /login, sending the created username &
         #   an incorrect password
+        post_data = {
+            'username': 'me1',
+            'password': 'Really!!'
+        }
+        response = self.app.post('/login', data=post_data)
         # - Check that the login form is displayed again, with an appropriate
         #   error message
         pass
 
     def test_logout(self):
-        # TODO: Write a test for the logout route. It should:
         # - Create a user
+        create_user()
         # - Log the user in (make a POST request to /login)
+        post_data = {
+            'username': 'me1',
+            'password': 'password'
+        }
+        self.app.post('/login', data=post_data)
         # - Make a GET request to /logout
         # - Check that the "login" button appears on the homepage
         pass
