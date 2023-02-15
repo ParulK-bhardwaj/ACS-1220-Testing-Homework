@@ -46,21 +46,6 @@ def create_user():
     db.session.add(user)
     db.session.commit()
 
-def create_authors():
-    # b1 = Book(name='To Kill a Mockingbird')
-    a1 = Author(
-        name='Harper Lee',
-        biography='ABC',
-        # books=a1
-    )
-    db.session.add(a1)
-    db.session.commit()
-
-    # b2 = Book(name='Sapiens')
-    a2 = Author(name='Yuval Noah Harari')
-    db.session.add(a2)
-    db.session.commit()
-
 #################################################
 # Tests
 #################################################
@@ -277,19 +262,32 @@ class MainTests(unittest.TestCase):
         self.assertIn("me1", response_text)
 
     def test_favorite_book(self):
-        # TODO: Login as the user me1
+        # Login as the user me1
+        create_books()
         create_user()
-        # TODO: Make a POST request to the /favorite/1 route
-
-        # TODO: Verify that the book with id 1 was added to the user's favorites
-        pass
+        login(self.app, 'me1', 'password')
+        #  Make a POST request to the /favorite/2 route
+        post_data = {
+            'book_id': 2
+        }
+        response = self.app.post('/favorite/2', data=post_data)
+        #  Verify that the book with id 2 was added to the user's favorites
+        user = User.query.filter_by(username='me1').one()
+        book = Book.query.get(2)
+        self.assertIn(book, user.favorite_books)
 
     def test_unfavorite_book(self):
-        # TODO: Login as the user me1, and add book with id 1 to me1's favorites
-
-        # TODO: Make a POST request to the /unfavorite/1 route
-
-        # TODO: Verify that the book with id 1 was removed from the user's 
-        # favorites
-        pass
+        # Login as the user me1, and add book with id 1 to me1's favorites
+        create_books()
+        create_user()
+        login(self.app, 'me1', 'password')
+        #  Make a POST request to the /unfavorite/2 route
+        post_data = {
+            'book_id': 2
+        }
+        response = self.app.post('/unfavorite/2', data=post_data)
+        #  Verify that the book with id 2 was removed from the user's favorites
+        user = User.query.filter_by(username='me1').one()
+        book = Book.query.get(2)
+        self.assertNotIn(book, user.favorite_books)
 
