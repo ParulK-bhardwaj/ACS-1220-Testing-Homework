@@ -4,7 +4,7 @@ from unittest import TestCase
 from datetime import date
  
 from books_app.extensions import app, db, bcrypt
-from books_app.models import Book, Author, User, Audience
+from books_app.models import Book, Author, User, Audience, Genre
 
 """
 Run these tests with the command:
