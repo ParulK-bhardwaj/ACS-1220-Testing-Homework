@@ -116,7 +116,8 @@ class AuthTests(TestCase):
         response = self.app.post('/login', data=post_data)
         # - Check that the login form is displayed again, with an appropriate
         #   error message
-        pass
+        response_text = response.get_data(as_text=True)
+        self.assertIn('Password doesn&#39;t match. Please try again.', response_text)
 
     def test_logout(self):
         # - Create a user
@@ -129,4 +130,5 @@ class AuthTests(TestCase):
         self.app.post('/login', data=post_data)
         # - Make a GET request to /logout
         # - Check that the "login" button appears on the homepage
+
         pass
