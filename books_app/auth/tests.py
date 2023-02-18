@@ -129,6 +129,8 @@ class AuthTests(TestCase):
         }
         self.app.post('/login', data=post_data)
         # - Make a GET request to /logout
+        self.app.get('/logout')
         # - Check that the "login" button appears on the homepage
-
-        pass
+        response = self.app.get('/')
+        response_text = response.get_data(as_text=True)
+        self.assertIn('login', response_text)
